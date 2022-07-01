@@ -1,11 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
-
+  const baseUrl = 'http://localhost:3000/';
 // Fetch requests 
     // Function for making a GET request 
     function fetchResource(url){
         return fetch(url)
         .then(res => res.json())
     }
+
+    // Function for making a POST request
+      // invocation of fetch [X]
+      // indicate method as POST [X]
+      // indicate body of POST request [X]
+      // parse body data with JSON.stringify(data) [X]
+        // different from res.json(). Pretty much the opposite
+        // sending OUT => JSON.stringify(data)
+        // receiving IN => res.json()
+        // JS <=> JSON <=> SQL(and others)
+    function createResource(url, body) {
+      // invocation of fetch
+      // body parameter is an object
+      return fetch(url, {
+        // indicate method as POST
+        method: 'POST',
+        // indicate body of POST request
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // parse body data with JSON.stringify(data)
+        body: JSON.stringify(body)
+      })
+      .then(res => res.json())
+    }
+
 // Rendering functions
     // Renders Header
     function renderHeader(store){
@@ -54,7 +80,22 @@ document.addEventListener('DOMContentLoaded', () => {
             inventory:e.target.inventory.value,
             reviews:[]
         }
-        renderBookCard(book)
+
+        createResource('http://localhost:3000/books', book)
+          .then(renderBookCard)
+          .catch(err => console.error(err))
+    }
+
+    function handleStoreForm(e) {
+      e.preventDefault()
+
+      const store = {
+        location: e.target.location.value,
+        address: e.target.address.value,
+        number:e.target.number.value,
+        name: e.target.name.value,
+        hours: e.target.hours.value
+      }
     }
 
 
