@@ -17,6 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
         }
 
+        function deleteResource(id, target) {
+          return fetch(`http://localhost:3000/books/${id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(res => res.json())
+          .then(() => target.remove())
+        }
+
     // Rendering functions
         // Renders Header
         function renderHeader(store){
@@ -47,7 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
             li.className = 'list-li'
     
             //Event Listeners 
-            btn.addEventListener('click',()=>li.remove())
+            // btn.addEventListener('click',()=>li.remove())
+            btn.addEventListener('click', (e) => deleteResource(cardData.id, e.target.parentElement))
         
             li.append(h3,pAuthor,pPrice,img,btn)
             document.querySelector('#book-list').append(li)
