@@ -1,3 +1,8 @@
+// fetch('https://pokeapi.co/api/v2/pokemon/mewtwo/')
+//   .then(res => res.json())
+//   .then(data => console.log(data))
+//   .catch(console.error)
+
 document.addEventListener('DOMContentLoaded', () => {
     // Fetch requests 
         // Function for making a GET request 
@@ -52,6 +57,35 @@ document.addEventListener('DOMContentLoaded', () => {
             li.append(h3,pAuthor,pPrice,img,btn)
             document.querySelector('#book-list').append(li)
         }
+
+        function renderBookResults(book) {
+          const div = document.createElement('div')
+          const title = document.createElement('h2')
+          const subtitle = document.createElement('p')
+          const authors = document.createElement('p')
+          const authorsArray = book.volumeInfo.authors
+
+          title.textContent = book.volumeInfo.title
+          authors.textContent = 'By '
+          
+          div.append(title)
+          document.querySelector('main').append(div)
+
+          if(book.volumeInfo.subtitle) {
+            subtitle.textContent = book.volumeInfo.subtitle
+            div.append(subtitle)
+          }
+
+          authorsArray.forEach(author => {
+            if(author == authorsArray[authorsArray.length - 1]){
+              authors.textContent += author
+            } else {
+              authors.textContent += `${author}, `
+            }
+          })
+
+          div.append(authors)
+        }
     
     // Event Handlers
         function handleForm(e){
@@ -86,7 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
         function handleAPIQuery(e){
             e.preventDefault()
             const search = e.target.search.value
-               
+            fetch(`https://www.googleapis.com/books/v1/volumes?q=${search}&key=${apiKey}`)
+            .then(res => res.json())
+            .then(books => {
+              books.items.forEach(renderBookResults)
+            })
         }
 
     
